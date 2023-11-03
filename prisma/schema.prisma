@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model fecfechas {
+  fecid               Int       @db.UnsignedInt   @id @default(autoincrement())
+  fecdia              Int       @db.UnsignedInt
+  fecmes              Int       @db.UnsignedInt
+  fecanio             Int       @db.UnsignedInt
+  fecjornada          Int       @db.UnsignedInt
+  fecmesnombre        String    @db.VarChar(255)
+  fecactual           Boolean?  @default(false)
+  fecanionombre       String    @db.VarChar(255)
+  created_at          DateTime  @default(now()) @db.Timestamp(0)
+  updated_at          DateTime  @default(now()) @db.Timestamp(0)
+  puupuntosusuarios   puupuntosusuarios[]
+  parpartidos         parpartidos[]
+}
+
+model paipaises {
+  paiid         Int             @id @db.UnsignedInt @default(autoincrement())
+  painombre     String          @db.VarChar(255)
+  paiimagen     String?         @db.VarChar(255)
+  created_at    DateTime        @default(now()) @db.Timestamp(0)
+  updated_at    DateTime        @default(now()) @db.Timestamp(0)
+  partlocal     parpartidos[]   @relation("partlocal")
+  partvisitante parpartidos[]   @relation("partvisitante")
+}
+
+model parpartidos {
+  partid            Int       @id @db.UnsignedInt @default(autoincrement())
+  fecid             Int       @db.UnsignedInt
+  parlocal          Int       @db.UnsignedInt
+  parvisitante      Int       @db.UnsignedInt
+  parresultado      Int?      @db.UnsignedInt
+  parfinalizado     Boolean   @default(false)
+  pargoleslocal     Int?      @db.UnsignedInt
+  pargolesvisitante Int?      @db.UnsignedInt
+  created_at        DateTime @default(now()) @db.Timestamp(0)
+  updated_at        DateTime @default(now()) @db.Timestamp(0)
+  fecfechas         fecfechas @relation(fields: [fecid], references: [fecid])
+  partlocal         paipaises @relation("partlocal",fields: [parlocal], references: [paiid])
+  partvisitante     paipaises @relation("partvisitante",fields: [parvisitante], references: [paiid])
+  pruprediccionusuarios pruprediccionusuarios[]
+}
+
+model pruprediccionusuarios {
+  pruid             Int       @id @db.UnsignedInt @default(autoincrement())
+  usuid             Int       @db.UnsignedInt
+  partid            Int       @db.UnsignedInt
+  pruresultado      Int?      @db.UnsignedInt
+  prugoleslocal     Int?      @db.UnsignedInt
+  prugolesvisitante Int?      @db.UnsignedInt
+  usuusuarios       usuusuarios @relation(fields: [usuid], references: [usuid])
+  parpartidos       parpartidos @relation(fields: [partid], references: [partid])
+  created_at        DateTime @default(now()) @db.Timestamp(0)
+  updated_at        DateTime @default(now()) @db.Timestamp(0)
+}
+
+model puupuntosusuarios {
+  puuid       Int       @id @db.UnsignedInt @default(autoincrement())
+  usuid       Int       @db.UnsignedInt
+  fecid       Int       @db.UnsignedInt
+  puupuntos   Int?      @db.UnsignedInt
+  puupuntosresultado    Int?      @db.UnsignedInt
+  puupuntosmarcador     Int?      @db.UnsignedInt
+  puupuntosgoles        Int?      @db.UnsignedInt
+  created_at  DateTime  @default(now()) @db.Timestamp(0)
+  updated_at  DateTime  @default(now()) @db.Timestamp(0)
+  usuusuarios usuusuarios @relation(fields: [usuid], references: [usuid])
+  fecfechas   fecfechas @relation(fields: [fecid], references: [fecid])
+}
+
+model usuusuarios {
+  usuid                   Int       @id @db.UnsignedInt @default(autoincrement())
+  usuusuario              String    @db.VarChar(255)
+  usunombre               String?   @db.VarChar(255)
+  usuapellido             String?   @db.VarChar(255)
+  usutoken                String?   @db.VarChar(255)
+  usucorreo               String?   @db.VarChar(255)
+  created_at              DateTime @default(now()) @db.Timestamp(0)
+  updated_at              DateTime @default(now()) @db.Timestamp(0)
+  puupuntosusuarios       puupuntosusuarios[]
+  pruprediccionusuarios   pruprediccionusuarios[]
+}
