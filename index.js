@@ -1,14 +1,16 @@
-var express = require('express');
+const express = require('express')
+const cors = require('cors');
 
-var bodyParser = require('body-parser');
+const users_routes = require('./api/routes/Users/users.routes')
+const matches_routes = require('./api/routes/Matches/matches.routes')
 
-var app = express();
+const app = express()
+app.use(cors());
 
-var user_routes = require('./routes/user'); 
+app.use(express.json())
+app.use('/api/users', users_routes)
+app.use('/api/matches', matches_routes)
 
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(bodyParser.json());
-
-app.use('/api', user_routes);
-
-module.exports = app;
+const port = process.env.PORT || 8001
+app.listen(port)
+console.log('Server on port', port)
