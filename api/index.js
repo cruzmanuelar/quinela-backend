@@ -11,5 +11,6 @@ app.use(express.json())
 app.use('/api/users', users_routes)
 app.use('/api/matches', matches_routes)
 
-app.listen(3000)
-console.log('Server on port', 3000)
+const port = process.env.PORT || 3000
+app.listen(port)
+console.log('Server on port', port)
