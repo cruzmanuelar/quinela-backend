@@ -1,11 +1,11 @@
 {
   "name": "quinela-bondad",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "deploy" : "node index.js"
+    "start": "node app.js",
+    "deploy" : "node app.js"
   },
   "keywords": [],
   "author": "",
