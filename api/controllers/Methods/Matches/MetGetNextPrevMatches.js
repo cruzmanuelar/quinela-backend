@@ -63,6 +63,7 @@ controller.MetGetNextPrevMatches = async (req, res) => {
                         paiimagen : true
                     }
                 },
+                parhabilitado : true,
                 partvisitante : {
                     select : {
                         painombre : true,
@@ -127,13 +128,18 @@ controller.MetGetNextPrevMatches = async (req, res) => {
                 nextm['predictionLocal'] = predictionUser.prugoleslocal
                 nextm['predictionVisitante'] = predictionUser.prugolesvisitante
             }
+            nextm['done'] = predictionUser ? true : false
+
         }
 
         jsonResponse = {...jsonResponse,
             data : {
                 nextMatches,
                 prevMatches
-            }
+            },
+            dataUser : {
+                nextMatches,
+            },
         }
 
     }catch(err){

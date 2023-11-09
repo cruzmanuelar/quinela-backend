@@ -38,6 +38,7 @@ model parpartidos {
   parlocal          Int       @db.UnsignedInt
   parvisitante      Int       @db.UnsignedInt
   parresultado      Int?      @db.UnsignedInt
+  parhabilitado     Boolean?  @default(true)
   parfinalizado     Boolean   @default(false)
   pargoleslocal     Int?      @db.UnsignedInt
   pargolesvisitante Int?      @db.UnsignedInt
