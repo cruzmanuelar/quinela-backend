@@ -6,7 +6,8 @@ const prisma = new PrismaClient()
 controller.MetUserLogin = async (req, res) => {
 
     const {
-        req_usucorreo
+        req_usucorreo,
+        req_usupassword
     } = req.body
 
     let jsonResponse = {
@@ -21,19 +22,26 @@ controller.MetUserLogin = async (req, res) => {
         const token = crypto.randomBytes(32).toString('hex');
         const usu = await prisma.usuusuarios.findFirst({
             where : {
-                usuusuario : req_usucorreo
-            }
-        })
-        await prisma.usuusuarios.update({
-            where : {
-                usuid : usu.usuid
-            },
-            data : {
-                usutoken : token
+                usuusuario : req_usucorreo,
+                usucorreo : req_usupassword
             }
         })
 
-        jsonResponse = {...jsonResponse, token : token}
+        if(usu){
+            await prisma.usuusuarios.update({
+                where : {
+                    usuid : usu.usuid
+                },
+                data : {
+                    usutoken : token
+                }
+            })
+            jsonResponse = {...jsonResponse, token : token}
+                
+        }else{
+            jsonResponse = {...jsonResponse, message:"Credenciales incorrectas", response : false}
+        }
+
         
     }catch(err){
         console.log(err)
