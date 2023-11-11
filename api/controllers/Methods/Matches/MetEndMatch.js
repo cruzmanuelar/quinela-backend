@@ -93,7 +93,7 @@ controller.UpdatePredictionUser = async ( match ) => {
             }    
         }
     
-        for await(user of users){
+        for await(usu of users){
     
             let ptosUser = 0
             let ptosResult = 0
@@ -103,36 +103,40 @@ controller.UpdatePredictionUser = async ( match ) => {
             const existData = await prisma.puupuntosusuarios.findFirst({
                 where : {
                     fecid   : match.fecid,
-                    usuid   : user.usuid
+                    usuid   : usu.usuid
                 }
             })
 
             const predictionUser = await prisma.pruprediccionusuarios.findFirst({
                 where : {
-                    usuid : user.usuid,
+                    usuid : usu.usuid,
                     partid : match.partid
                 }
             })
-    
-            if(resultReal == predictionUser.pruresultado){
-                ptosResult = ptosResult + 3
-            }
-    
-            if(match.pargoleslocal == predictionUser.prugoleslocal && match.pargolesvisitante == predictionUser.prugolesvisitante){
-                ptosScore = ptosScore + 2
-            }
-    
-            if(match.pargoleslocal == predictionUser.prugoleslocal){
-                ptosGoals = ptosGoals + 1
-            }
-    
-    
-            if(match.pargolesvisitante == predictionUser.prugolesvisitante){
-                ptosGoals = ptosGoals + 1
-            }
-    
-            ptosUser = ptosGoals + ptosScore + ptosResult
 
+            if(predictionUser){
+                if(resultReal == predictionUser.pruresultado){
+                    ptosResult = ptosResult + 3
+                }
+        
+                if(match.pargoleslocal == predictionUser.prugoleslocal && match.pargolesvisitante == predictionUser.prugolesvisitante){
+                    ptosScore = ptosScore + 2
+                }
+        
+                if(match.pargoleslocal == predictionUser.prugoleslocal){
+                    ptosGoals = ptosGoals + 1
+                }
+        
+        
+                if(match.pargolesvisitante == predictionUser.prugolesvisitante){
+                    ptosGoals = ptosGoals + 1
+                }
+
+                ptosUser = ptosGoals + ptosScore + ptosResult
+            }else{
+                
+            }
+    
             if(existData){
                 await prisma.puupuntosusuarios.update({
                     where : {
@@ -156,7 +160,7 @@ controller.UpdatePredictionUser = async ( match ) => {
             }else{
                 await prisma.puupuntosusuarios.create({
                     data : {
-                        usuid               : user.usuid,
+                        usuid               : usu.usuid,
                         fecid               : match.fecid,
                         puupuntosresultado  : ptosResult,
                         puupuntosmarcador   : ptosScore,

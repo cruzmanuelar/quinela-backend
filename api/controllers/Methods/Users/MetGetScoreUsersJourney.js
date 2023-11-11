@@ -2,10 +2,13 @@ const controller = {}
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
+controller.MetGetScoreUsersJourney = async (req, res) => {
 
-controller.MetGetScoreUsers = async (req, res) => {
+    const {
+        req_fecid
+    } = req.body
 
-    
+
     let jsonResponse = {
         message : "Se obtuvieron la tabla de posiciones con exito",
         response: true,
@@ -25,6 +28,9 @@ controller.MetGetScoreUsers = async (req, res) => {
                 puupuntosgoles      : true,
                 puupuntos           : true
             },
+            where : {
+                fecid : req_fecid
+            }
         })
 
         let index = 1
