@@ -4,7 +4,7 @@ const SelectNextJourneyController = require('../../Methods/Matches/MetSelectNext
 controller.ValSelectNextJourney = async (req, res) => {
 
     try{
-
+        
         await SelectNextJourneyController.MetSelectNextJourney(req,res)
         
     }catch(err){

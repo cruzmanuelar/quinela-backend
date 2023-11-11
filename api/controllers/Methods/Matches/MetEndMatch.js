@@ -10,6 +10,10 @@ controller.MetEndMatch = async (req, res) => {
         req_golVisitante
     } = req.body
 
+    const {
+        reqtoken
+    } = req.headers
+
     let jsonResponse = {
         message : "Se marco finalizado el encuentro con exito",
         response: true,
@@ -17,6 +21,51 @@ controller.MetEndMatch = async (req, res) => {
     let statusCode = 200
 
     try{
+
+        const usu = await prisma.usuusuarios.findFirst({
+            where : {
+                usutoken : reqtoken.replace(/['"]+/g, '')
+            }
+        })
+
+        if(usu.usuid == 10 || usu.usuid == 11){
+            if(infoMatch.parfinalizado){
+                jsonResponse = {...jsonResponse,
+                    message : "El partido ya se marco como finalizado anteriormente",
+                }
+            }else{
+    
+                let resultMatch = null
+                if(req_golLocal != req_golVisitante){
+                    resultMatch = req_golLocal > req_golVisitante
+                                    ? infoMatch.parlocal
+                                    : infoMatch.parvisitante
+                }
+        
+                const match = await prisma.parpartidos.update({
+                    where : {
+                        partid : req_partid,
+                    },
+                    data : {
+                        parfinalizado : true,
+                        pargoleslocal : req_golLocal,
+                        pargolesvisitante : req_golVisitante,
+                        parresultado : resultMatch
+                    }
+                })
+    
+                const responseUpdate = await controller.UpdatePredictionUser(match)
+                if(!responseUpdate){
+                    jsonResponse = {...jsonResponse,
+                        message : 'Ha ocurrido un error al actualizar los puntajes',
+                        response: false
+                    }
+                    statusCode = 500
+                }
+            }
+        }else{
+            jsonResponse = {...jsonResponse, response : false, message : "El usuario no tiene permisos"}
+        }
 
         const infoMatch = await prisma.parpartidos.findFirst({
             where : {
@@ -29,40 +78,7 @@ controller.MetEndMatch = async (req, res) => {
             }
         })
 
-        if(infoMatch.parfinalizado){
-            jsonResponse = {...jsonResponse,
-                message : "El partido ya se marco como finalizado anteriormente",
-            }
-        }else{
 
-            let resultMatch = null
-            if(req_golLocal != req_golVisitante){
-                resultMatch = req_golLocal > req_golVisitante
-                                ? infoMatch.parlocal
-                                : infoMatch.parvisitante
-            }
-    
-            const match = await prisma.parpartidos.update({
-                where : {
-                    partid : req_partid,
-                },
-                data : {
-                    parfinalizado : true,
-                    pargoleslocal : req_golLocal,
-                    pargolesvisitante : req_golVisitante,
-                    parresultado : resultMatch
-                }
-            })
-
-            const responseUpdate = await controller.UpdatePredictionUser(match)
-            if(!responseUpdate){
-                jsonResponse = {...jsonResponse,
-                    message : 'Ha ocurrido un error al actualizar los puntajes',
-                    response: false
-                }
-                statusCode = 500
-            }
-        }
     }catch(err){
         console.log(err)
         jsonResponse = {...jsonResponse,

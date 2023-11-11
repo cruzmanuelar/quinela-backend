@@ -23,6 +23,7 @@ controller.MetGetNextJourney = async (req, res) => {
                 partid : true,
                 parlocal : true,
                 parvisitante : true,
+                parhabilitado : true,
                 parfinalizado : true,
                 pargoleslocal : true,
                 pargolesvisitante : true,

@@ -11,11 +11,11 @@ const GetPredictionsMatchValidation = require('../../controllers/Validations/Mat
 const SelectNextJourneyValidation = require('../../controllers/Validations/Matches/ValSelectNextJourney')
 const GetJourneysValidation = require('../../controllers/Validations/Matches/ValGetJourneys')
 const GetNextJourneyValidation = require('../../controllers/Validations/Matches/ValGetNextJourney')
-
+const DisableMatchValidation = require('../../controllers/Validations/Matches/ValDisableMatch')
 
 router.post('/create', CreateMatchesValidation.ValCreateMatches)
 router.post('/match', GetMatchValidation.ValGetMatch)
-router.post('/endMatch', EndMatchValidation.ValEndMatch)
+router.post('/end-match', EndMatchValidation.ValEndMatch)
 router.post('/next-prev', NextPrevMatchesValidation.ValGetNextPrevMatches)
 router.post('/create-quinela', CreateQuinelaValidation.ValCreateQuinela)
 router.post('/get-all', GetAllMatchesValidation.ValGetAllMatches)
@@ -23,5 +23,6 @@ router.post('/predictions-journey', GetPredictionsMatchValidation.ValGetPredicti
 router.post('/select-next-journey', SelectNextJourneyValidation.ValSelectNextJourney)
 router.post('/get-journeys', GetJourneysValidation.ValGetJourneys)
 router.post('/get-next-journey', GetNextJourneyValidation.ValGetNextJourney)
+router.post('/disable-match', DisableMatchValidation.ValDisableMatch)
 
 module.exports = router
