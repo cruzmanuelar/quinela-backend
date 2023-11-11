@@ -38,7 +38,7 @@ controller.MetCreateQuinela = async (req, res) => {
                 }
             })
 
-            let result = 0
+            let result = null
             if(data.predictionLocal != data.predictionVisitante){
                 if(data.predictionLocal > data.predictionVisitante){
                     result = 1

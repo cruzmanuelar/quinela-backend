@@ -10,14 +10,17 @@ controller.MetGetPredictionsMatch = async (req, res) => {
 
     try{
 
-        const predictions = await prisma.pruprediccionusuarios.findMany({
+        let predictions = await prisma.pruprediccionusuarios.findMany({
             where : {
                 partid : req_id
             },
             select : {
                 parpartidos : {
                     select : {
-                        parresultado : true
+                        parresultado : true,
+                        parfinalizado : true,
+                        parlocal : true,
+                        parvisitante : true
                     }
                 },
                 usuusuarios : {
@@ -28,6 +31,17 @@ controller.MetGetPredictionsMatch = async (req, res) => {
                 pruresultado : true,
                 prugoleslocal : true,
                 prugolesvisitante : true
+            }
+        })
+
+        predictions.map(pre => {
+
+            if(pre.parpartidos.parresultado == pre.parpartidos.parlocal){
+                pre.parpartidos.parresultado = 1    
+            }else if(pre.parpartidos.parresultado == pre.parpartidos.parvisitante){
+                pre.parpartidos.parresultado = 2
+            }else{
+                pre.parpartidos.parresultado = null
             }
         })
 
