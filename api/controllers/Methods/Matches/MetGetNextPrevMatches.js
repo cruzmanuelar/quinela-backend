@@ -63,6 +63,11 @@ controller.MetGetNextPrevMatches = async (req, res) => {
                         paiimagen : true
                     }
                 },
+                fecfechas : {
+                    select : {
+                        fecjornada : true
+                    }
+                },
                 parhabilitado : true,
                 partvisitante : {
                     select : {
@@ -86,6 +91,11 @@ controller.MetGetNextPrevMatches = async (req, res) => {
                         select : {
                             painombre : true,
                             paiimagen : true
+                        }
+                    },
+                    fecfechas : {
+                        select : {
+                            fecjornada : true
                         }
                     },
                     partvisitante : {

@@ -32,6 +32,11 @@ controller.MetGetNextJourney = async (req, res) => {
                         paiimagen : true
                     }
                 },
+                fecfechas : {
+                    select : {
+                        fecjornada : true
+                    }
+                },
                 partvisitante : {
                     select : {
                         painombre : true,

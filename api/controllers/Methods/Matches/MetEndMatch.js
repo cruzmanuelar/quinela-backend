@@ -49,7 +49,8 @@ controller.MetEndMatch = async (req, res) => {
                 data : {
                     parfinalizado : true,
                     pargoleslocal : req_golLocal,
-                    pargolesvisitante : req_golVisitante
+                    pargolesvisitante : req_golVisitante,
+                    parresultado : resultMatch
                 }
             })
 
