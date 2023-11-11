@@ -22,6 +22,17 @@ controller.MetEndMatch = async (req, res) => {
 
     try{
 
+        const infoMatch = await prisma.parpartidos.findFirst({
+            where : {
+                partid : req_partid
+            },
+            select : {
+                parlocal        : true,
+                parvisitante    : true,
+                parfinalizado   : true
+            }
+        })
+
         const usu = await prisma.usuusuarios.findFirst({
             where : {
                 usutoken : reqtoken.replace(/['"]+/g, '')
@@ -67,16 +78,7 @@ controller.MetEndMatch = async (req, res) => {
             jsonResponse = {...jsonResponse, response : false, message : "El usuario no tiene permisos"}
         }
 
-        const infoMatch = await prisma.parpartidos.findFirst({
-            where : {
-                partid : req_partid
-            },
-            select : {
-                parlocal        : true,
-                parvisitante    : true,
-                parfinalizado   : true
-            }
-        })
+
 
 
     }catch(err){
