@@ -46,7 +46,7 @@ controller.MetGetNextJourney = async (req, res) => {
                 }
             }
         })
-
+        await prisma.$disconnect()
         res.status(200)
         .json({
             message : 'Se han obtenido los partidos con exito',
@@ -55,6 +55,7 @@ controller.MetGetNextJourney = async (req, res) => {
         }).end()
         
     }catch(err){
+        await prisma.$disconnect()
         console.log(err)
         res.status(500)
             .json({

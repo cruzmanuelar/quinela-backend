@@ -48,6 +48,7 @@ controller.MetGetTablePlayOff = async (req, res) => {
         }
 
         allTeams = allTeams.sort(sortTablePositions);
+        await prisma.$disconnect()
         res.status(200)
             .json({
                 message : 'Se ha obtenido la tabla de posiciones con exito',
@@ -56,6 +57,7 @@ controller.MetGetTablePlayOff = async (req, res) => {
             }).end()
         
     }catch(err){
+        await prisma.$disconnect()
         console.log(err)
         res.status(500)
             .json({

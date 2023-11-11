@@ -54,6 +54,7 @@ controller.MetGetScoreUsers = async (req, res) => {
         statusCode = 500
         jsonResponse = {...jsonResponse, message : 'Ha ocurrido un error al obtener la tabla de posiciones', response : false}
     }finally{
+        await prisma.$disconnect()
         res.status(statusCode)
         .json(jsonResponse).end()
     }

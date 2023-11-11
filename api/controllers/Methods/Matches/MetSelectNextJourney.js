@@ -51,10 +51,12 @@ controller.MetSelectNextJourney = async (req, res) => {
             jsonResponse = {...jsonResponse, response : false, message : "El usuario no tiene permisos"}
         }
 
+        await prisma.$disconnect()
         res.status(statusCode)
         .json(jsonResponse).end()
 
     }catch(err){
+        await prisma.$disconnect()
         console.log(err)
         res.status(500)
             .json({

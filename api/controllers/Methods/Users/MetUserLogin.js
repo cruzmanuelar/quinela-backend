@@ -48,6 +48,7 @@ controller.MetUserLogin = async (req, res) => {
         statusCode = 500
         jsonResponse = {...jsonResponse, message : 'Ha ocurrido un error al logear al usuario', response : false}
     }finally{
+        await prisma.$disconnect()
         res.status(statusCode)
         .json(jsonResponse)
     }

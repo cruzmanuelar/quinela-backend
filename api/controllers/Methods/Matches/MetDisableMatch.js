@@ -43,6 +43,7 @@ controller.MetDisableMatch = async (req, res) => {
         console.log(err)
         jsonResponse = {...jsonResponse, response : false, message : "Ha ocurrido un error al actualizar el partido"}
     }finally{
+        await prisma.$disconnect()
         res.status(statusCode)
         .json(jsonResponse).end()
     }

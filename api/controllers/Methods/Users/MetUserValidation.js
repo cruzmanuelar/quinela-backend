@@ -29,6 +29,7 @@ controller.MetUserValidation = async (req, res) => {
         console.log(err)
         jsonResponse = {...jsonResponse, response : false, message : "Ha ocurrido un error al validar al usuario"}
     }finally{
+        await prisma.$disconnect()
         res.status(statusCode)
         .json(jsonResponse).end()
     }

@@ -159,6 +159,7 @@ controller.MetGetNextPrevMatches = async (req, res) => {
             response: false
         }
     }finally{
+        await prisma.$disconnect()
         res.status(statusCode)
         .json(jsonResponse).end()
     }

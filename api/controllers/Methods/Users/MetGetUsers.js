@@ -22,6 +22,7 @@ controller.MetGetUsers = async (req, res) => {
         console.log(err)
 
     }finally{
+        await prisma.$disconnect()
         res.status(statusCode)
             .json(jsonResponse)
     }
