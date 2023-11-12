@@ -9,7 +9,7 @@ controller.MetGetTablePlayOff = async (req, res) => {
 
         let allTeams = await prisma.paipaises.findMany({})
 
-        for await(team of allTeams){
+        for await(const team of allTeams){
 
             const matches = await prisma.parpartidos.findMany({
                 where : {

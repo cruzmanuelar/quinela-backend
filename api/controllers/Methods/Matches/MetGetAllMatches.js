@@ -50,7 +50,7 @@ controller.MetGetAllMatches = async (req, res) => {
             }
         })
 
-        for await (mat of data){
+        for await (const mat of data){
             const fec = await prisma.fecfechas.findFirst({
                 where : {
                     fecid : mat.journey

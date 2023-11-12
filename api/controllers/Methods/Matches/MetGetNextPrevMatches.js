@@ -109,7 +109,7 @@ controller.MetGetNextPrevMatches = async (req, res) => {
                 }
             })
 
-            for await(prevm of prevMatches){
+            for await(const prevm of prevMatches){
 
             
                 const predictionUser = await prisma.pruprediccionusuarios.findFirst({
@@ -126,7 +126,7 @@ controller.MetGetNextPrevMatches = async (req, res) => {
             }
         }
 
-        for await(nextm of nextMatches){
+        for await(const nextm of nextMatches){
             const predictionUser = await prisma.pruprediccionusuarios.findFirst({
                 where : {
                     usuid : user.usuid,

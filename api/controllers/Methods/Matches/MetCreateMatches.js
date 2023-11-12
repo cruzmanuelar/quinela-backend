@@ -29,7 +29,7 @@ controller.MetCreateMatches = async (req, res) => {
                 message : "Los partidos ya estan registrados"}
         }else{
             
-            for await ( match of req_matches){
+            for await ( const match of req_matches){
     
                 const man = await prisma.parpartidos.create({
                     data : {

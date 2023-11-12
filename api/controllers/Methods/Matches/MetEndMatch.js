@@ -113,7 +113,7 @@ controller.UpdatePredictionUser = async ( match ) => {
             }    
         }
     
-        for await(usu of users){
+        for await(const usu of users){
     
             let ptosUser = 0
             let ptosResult = 0

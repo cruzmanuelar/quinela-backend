@@ -29,7 +29,7 @@ controller.MetCreateQuinela = async (req, res) => {
             }
         })
 
-        for await(data of req_data){
+        for await(const data of req_data){
 
             const existQuinela = await prisma.pruprediccionusuarios.findFirst({
                 where : {

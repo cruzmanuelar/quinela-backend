@@ -28,7 +28,7 @@ controller.MetGetScoreUsers = async (req, res) => {
         })
 
         let index = 1
-        for await(pos of positions){
+        for await(const pos of positions){
             const user = await prisma.usuusuarios.findFirst({
                 where : {
                     usuid : pos.usuid

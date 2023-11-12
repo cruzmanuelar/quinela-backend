@@ -12,6 +12,7 @@ const SelectNextJourneyValidation = require('../../controllers/Validations/Match
 const GetJourneysValidation = require('../../controllers/Validations/Matches/ValGetJourneys')
 const GetNextJourneyValidation = require('../../controllers/Validations/Matches/ValGetNextJourney')
 const DisableMatchValidation = require('../../controllers/Validations/Matches/ValDisableMatch')
+const UpdatePointsValidation = require('../../controllers/Validations/Matches/ValUpdatePoints')
 
 router.post('/create', CreateMatchesValidation.ValCreateMatches)
 router.post('/match', GetMatchValidation.ValGetMatch)
@@ -24,5 +25,6 @@ router.post('/select-next-journey', SelectNextJourneyValidation.ValSelectNextJou
 router.post('/get-journeys', GetJourneysValidation.ValGetJourneys)
 router.post('/get-next-journey', GetNextJourneyValidation.ValGetNextJourney)
 router.post('/disable-match', DisableMatchValidation.ValDisableMatch)
+router.post('/update-points', UpdatePointsValidation.ValUpdatePoints)
 
 module.exports = router
