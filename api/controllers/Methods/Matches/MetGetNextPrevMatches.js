@@ -11,7 +11,6 @@ controller.MetGetNextPrevMatches = async (req, res) => {
     let jsonResponse = {
         message : "Se obtuvieron los partidos con exito",
         response: true,
-        data    : []
     }
     let statusCode = 200
 
@@ -154,8 +153,9 @@ controller.MetGetNextPrevMatches = async (req, res) => {
 
     }catch(err){
         console.log(err)
+        statusCode = 500
         jsonResponse = {...jsonResponse,
-            message : 'Ha ocurrido un error al obtener los partidos',
+            message : "Ha ocurrido un error al obtener los partidos",
             response: false
         }
     }finally{

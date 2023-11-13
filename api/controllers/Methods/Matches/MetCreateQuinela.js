@@ -76,7 +76,7 @@ controller.MetCreateQuinela = async (req, res) => {
     }catch(err){
         console.log(err)
         jsonResponse = {...jsonResponse,
-            message : 'Ha ocurrido un error al registrar la quinela',
+            message : "Ha ocurrido un error al registrar la quinela",
             response: false
         }
     }finally{

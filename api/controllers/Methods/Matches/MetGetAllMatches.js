@@ -4,9 +4,14 @@ const prisma = new PrismaClient()
 
 controller.MetGetAllMatches = async (req, res) => {
 
-    try{
+    let jsonResponse = {
+        message : "Los partidos se obtuvieron con exito",
+        response: true,
+    }
+    let statusCode = 200
+    let data = []
 
-        let data = []
+    try{
 
         const matches = await prisma.parpartidos.findMany({
             select : {
@@ -59,22 +64,17 @@ controller.MetGetAllMatches = async (req, res) => {
 
             mat['description'] = fec.fecmesnombre.substring(0, 3) + " " + fec.fecanio 
         }
-        await prisma.$disconnect()
-        res.status(200)
-            .json({
-                message : 'Ha ocurrido un error al obtener los partidos',
-                response: true,
-                data
-            })
+
+        jsonResponse = {...jsonResponse, data : data }
         
     }catch(err){
-        await prisma.$disconnect()
         console.log(err)
-        res.status(500)
-            .json({
-                message : 'Ha ocurrido un error al obtener los partidos',
-                response: false
-            }).end()
+        statusCode = 500
+        jsonResponse = {...jsonResponse, response : false, message : "Ha ocurrido un error al obtener los partidos"}
+    }finally{
+        await prisma.$disconnect()
+        res.status(statusCode)
+            .json(jsonResponse).end()
     }
 }
 

@@ -4,6 +4,12 @@ const prisma = new PrismaClient()
 
 controller.MetUpdatePoints = async (req, res) => {
 
+    let jsonResponse = {
+        response : true,
+        message : "Se han actualizado los puntajes con exito"
+    }
+    let statusCode = 200
+
     try{
 
         await prisma.puupuntosusuarios.deleteMany({})
@@ -77,22 +83,16 @@ controller.MetUpdatePoints = async (req, res) => {
                     }
                 })
             }
-
-
         }
-        await prisma.$disconnect()
-        res.status(200)
-        .json({
-            message : 'Se han actualizado los puntajes con exito',
-            response: true
-        }).end()
+
     }catch(err){
         console.log(err)
-        res.status(500)
-            .json({
-                message : 'Ha ocurrido un error al actualizar los puntajes',
-                response: false
-            }).end()
+        statusCode = 500
+        jsonResponse = {...jsonResponse, response: false, message : "Ha ocurrido un error al actualizar los puntajes"}
+    }finally{
+        res.status(statusCode)
+            .json(jsonResponse).end()
+        
     }
 }
 

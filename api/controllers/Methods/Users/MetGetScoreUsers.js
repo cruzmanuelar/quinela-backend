@@ -4,7 +4,6 @@ const prisma = new PrismaClient()
 
 
 controller.MetGetScoreUsers = async (req, res) => {
-
     
     let jsonResponse = {
         message : "Se obtuvieron la tabla de posiciones con exito",
@@ -12,10 +11,9 @@ controller.MetGetScoreUsers = async (req, res) => {
         data : []
     }
     let statusCode = 200
+    let data = []
 
     try{
-
-        let data = []
 
         const positions = await prisma.puupuntosusuarios.groupBy({
             by: ['usuid'],
@@ -46,7 +44,6 @@ controller.MetGetScoreUsers = async (req, res) => {
             index = index + 1
         }
     
-
         jsonResponse = {...jsonResponse, data : data}
         
     }catch(err){

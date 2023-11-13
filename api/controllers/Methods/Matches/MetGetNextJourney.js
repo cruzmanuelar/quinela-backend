@@ -1,10 +1,17 @@
 const controller = {}
 const { PrismaClient } = require('@prisma/client')
+const { response } = require('express')
 const prisma = new PrismaClient()
 
 controller.MetGetNextJourney = async (req, res) => {
 
-    let matches = []
+
+    let jsonResponse = {
+        message : "Se obtuvo el pais con exito",
+        response: true,
+    }
+    let statusCode = 200
+    let data = []
 
     try{
 
@@ -15,7 +22,7 @@ controller.MetGetNextJourney = async (req, res) => {
         })
 
 
-        matches = await prisma.parpartidos.findMany({
+        data = await prisma.parpartidos.findMany({
             where : {
                 fecid : fec.fecid
             },
@@ -46,22 +53,17 @@ controller.MetGetNextJourney = async (req, res) => {
                 }
             }
         })
-        await prisma.$disconnect()
-        res.status(200)
-        .json({
-            message : 'Se han obtenido los partidos con exito',
-            response: true,
-            data : matches
-        }).end()
         
+        jsonResponse = {...jsonResponse, data : data }
+
     }catch(err){
-        await prisma.$disconnect()
         console.log(err)
-        res.status(500)
-            .json({
-                message : 'Ha ocurrido un error al obtener la siguiente jornada',
-                response: false
-            }).end()
+        statusCode = 500
+        jsonResponse = {...jsonResponse, response : false, message : "Ha ocurrido un error al obtener la siguiente jornada"}
+    }finally{
+        await prisma.$disconnect()
+        res.status(statusCode)
+            .json(jsonResponse).end()
     }
 }
 

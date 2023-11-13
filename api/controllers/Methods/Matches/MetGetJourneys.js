@@ -4,6 +4,11 @@ const prisma = new PrismaClient()
 
 controller.MetGetJourneys = async (req, res) => {
 
+    let statusCode = 500
+    let jsonResponse = {
+        response : true,
+        message : "Se han obtenido las jornadas con exito"
+    }
     let data = []
 
     try{
@@ -18,22 +23,16 @@ controller.MetGetJourneys = async (req, res) => {
             })
         })
 
-        await prisma.$disconnect()
-        res.status(200)
-            .json({
-                message : 'Se han obtenido las jornadas con exitos',
-                response: true,
-                data
-            }).end()
+        jsonResponse = {...jsonResponse, data : data }
         
     }catch(err){
-        await prisma.$disconnect()
         console.log(err)
-        res.status(500)
-            .json({
-                message : 'Ha ocurrido un error al obtener las jornadas',
-                response: false
-            }).end()
+        statusCode = 500
+        jsonResponse = {...jsonResponse, response : false, message : "Ha ocurrido un error al obtener las jornadas"}
+    }finally{
+        await prisma.$disconnect()
+        res.status(statusCode)
+            .json(jsonResponse).end()
     }
 }
 

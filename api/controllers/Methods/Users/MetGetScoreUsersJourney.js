@@ -8,7 +8,6 @@ controller.MetGetScoreUsersJourney = async (req, res) => {
         req_fecid
     } = req.body
 
-
     let jsonResponse = {
         message : "Se obtuvieron la tabla de posiciones con exito",
         response: true,
@@ -58,7 +57,7 @@ controller.MetGetScoreUsersJourney = async (req, res) => {
     }catch(err){
         console.log(err)
         statusCode = 500
-        jsonResponse = {...jsonResponse, message : 'Ha ocurrido un error al obtener la tabla de posiciones', response : false}
+        jsonResponse = {...jsonResponse, message : "Ha ocurrido un error al obtener la tabla de posiciones", response : false }
     }finally{
         await prisma.$disconnect()
         res.status(statusCode)

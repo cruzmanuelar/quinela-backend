@@ -5,6 +5,12 @@ const prisma = new PrismaClient()
 
 controller.MetGetTablePlayOff = async (req, res) => {
 
+    let jsonResponse = {
+        message : "Se ha obtenido la tabla de posiciones con exito",
+        response: true,
+    }
+    let statusCode = 200
+
     try{
 
         let allTeams = await prisma.paipaises.findMany({})
@@ -48,22 +54,16 @@ controller.MetGetTablePlayOff = async (req, res) => {
         }
 
         allTeams = allTeams.sort(sortTablePositions);
-        await prisma.$disconnect()
-        res.status(200)
-            .json({
-                message : 'Se ha obtenido la tabla de posiciones con exito',
-                response: true,
-                data : allTeams
-            }).end()
+        jsonResponse = {...jsonResponse, data : allTeams }        
         
     }catch(err){
-        await prisma.$disconnect()
         console.log(err)
-        res.status(500)
-            .json({
-                message : 'Ha ocurrido un error al obtener la tabla de posiciones',
-                response: false
-            }).end()
+        statusCode = 500
+        jsonResponse = {...jsonResponse, response :false, message : "Ha ocurrido un error al obtener la tabla de posiciones" }
+    }finally{
+        await prisma.$disconnect()
+        res.status(statusCode)
+            .json(jsonResponse).end()
     }
 }
 

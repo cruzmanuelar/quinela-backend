@@ -1,5 +1,6 @@
 const controller = {}
 const { PrismaClient } = require('@prisma/client')
+const { response } = require('express')
 const prisma = new PrismaClient()
 
 controller.MetGetPredictionsMatch = async (req, res) => {
@@ -7,6 +8,12 @@ controller.MetGetPredictionsMatch = async (req, res) => {
     const {
         req_id
     } = req.body
+
+    let jsonResponse = {
+        message : "Se han obtenido las predicciones con exito",
+        response: true,
+    }
+    let statusCode = 200
 
     try{
 
@@ -45,22 +52,16 @@ controller.MetGetPredictionsMatch = async (req, res) => {
             }
         })
 
-        await prisma.$disconnect()
-        res.status(200)
-        .json({
-            message : 'Se han obtenido las predicciones con exito',
-            response: true,
-            data : predictions
-        }).end()
-
+        jsonResponse = {...jsonResponse, data : predictions }
     }catch(err){
-        await prisma.$disconnect()
         console.log(err)
-        res.status(500)
-            .json({
-                message : 'Ha ocurrido un error al obtener las predicciones del partido',
-                response: false
-            }).end()
+        statusCode = 500
+        jsonResponse = {...jsonResponse, message : "Ha ocurrido un error al obtener las predicciones del partido",
+        response: false}
+    }finally{
+        await prisma.$disconnect()
+        res.status(statusCode)
+            .json(jsonResponse).end()
     }
 }
 

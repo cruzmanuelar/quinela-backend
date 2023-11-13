@@ -6,6 +6,7 @@ controller.ValCreateQuinela = async (req, res) => {
     try{
 
         await CreateQuinelaController.MetCreateQuinela(req, res)
+        
     }catch(err){
         console.log(err)
         res.status(500)

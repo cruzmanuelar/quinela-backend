@@ -78,9 +78,6 @@ controller.MetEndMatch = async (req, res) => {
             jsonResponse = {...jsonResponse, response : false, message : "El usuario no tiene permisos"}
         }
 
-
-
-
     }catch(err){
         console.log(err)
         jsonResponse = {...jsonResponse,

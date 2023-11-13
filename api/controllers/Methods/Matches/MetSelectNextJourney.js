@@ -12,13 +12,13 @@ controller.MetSelectNextJourney = async (req, res) => {
         reqtoken
     } = req.headers
 
-    try{
+    let jsonResponse = {
+        response : true,
+        message : "La jornada siguiente se ha establecido con exito"
+    }
+    let statusCode = 200
 
-        let jsonResponse = {
-            response : true,
-            message : "La jornada siguiente se ha establecido con exito"
-        }
-        let statusCode = 200
+    try{
 
         const usu = await prisma.usuusuarios.findFirst({
             where : {
@@ -50,19 +50,14 @@ controller.MetSelectNextJourney = async (req, res) => {
         }else{
             jsonResponse = {...jsonResponse, response : false, message : "El usuario no tiene permisos"}
         }
-
+    }catch(err){
+        console.log(err)
+        statusCode = 500
+        jsonResponse = {...jsonResponse, response : false, message : "Ha ocurrido un error al establecer la proxima jornada"}
+    }finally{
         await prisma.$disconnect()
         res.status(statusCode)
         .json(jsonResponse).end()
-
-    }catch(err){
-        await prisma.$disconnect()
-        console.log(err)
-        res.status(500)
-            .json({
-                message : 'Ha ocurrido un error al establecer la proxima jornada',
-                response: false
-            }).end()
     }
 }
 
