@@ -51,6 +51,9 @@ controller.MetGetTablePlayOff = async (req, res) => {
             team["gf"] = goals
             team["gc"] = goalsRival
             team["df"] = goals - goalsRival
+            if(team["painombre"] == "Ecuador"){
+                team["ptos"] = team["ptos"] - 3                
+            }
         }
 
         allTeams = allTeams.sort(sortTablePositions);
