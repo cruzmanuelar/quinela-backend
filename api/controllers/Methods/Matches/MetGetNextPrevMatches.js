@@ -39,16 +39,6 @@ controller.MetGetNextPrevMatches = async (req, res) => {
             },
         })
 
-        fecPrevMatch = await prisma.parpartidos.findFirst({
-            where : {
-                fecid : {
-                    lt : currentFec.fecid
-                }
-            },
-            orderBy : {
-                fecid : 'desc'
-            }
-        })
 
         nextMatches = await prisma.parpartidos.findMany({
             where : {
@@ -81,51 +71,7 @@ controller.MetGetNextPrevMatches = async (req, res) => {
             }
         })
 
-        if(fecPrevMatch){
-            prevMatches = await prisma.parpartidos.findMany({
-                where : {
-                    fecid : fecPrevMatch.fecid
-                },
-                select : {
-                    partid : true,
-                    partlocal : {
-                        select : {
-                            painombre : true,
-                            paiimagen : true
-                        }
-                    },
-                    fecfechas : {
-                        select : {
-                            fecjornada : true
-                        }
-                    },
-                    partvisitante : {
-                        select : {
-                            painombre : true,
-                            paiimagen : true
-                        }
-                    },
-                    pargoleslocal : true,
-                    pargolesvisitante : true
-                }
-            })
 
-            for await(const prevm of prevMatches){
-
-            
-                const predictionUser = await prisma.pruprediccionusuarios.findFirst({
-                    where : {
-                        usuid : user.usuid,
-                        partid : prevm.partid
-                    }
-                })
-    
-                if(predictionUser){
-                    prevm['predictionLocal'] = predictionUser.prugoleslocal
-                    prevm['predictionVisitante'] = predictionUser.prugolesvisitante
-                }
-            }
-        }
 
         for await(const nextm of nextMatches){
             const predictionUser = await prisma.pruprediccionusuarios.findFirst({
