@@ -27,7 +27,9 @@ controller.MetGetPredictionsMatch = async (req, res) => {
                         parresultado : true,
                         parfinalizado : true,
                         parlocal : true,
-                        parvisitante : true
+                        parvisitante : true,
+                        pargoleslocal : true,
+                        pargolesvisitante : true
                     }
                 },
                 usuusuarios : {
@@ -50,6 +52,8 @@ controller.MetGetPredictionsMatch = async (req, res) => {
             }else{
                 pre.parpartidos.parresultado = null
             }
+
+            pre["onFire"] = pre.parpartidos.pargoleslocal == pre.prugoleslocal && pre.parpartidos.pargolesvisitante == pre.prugolesvisitante
         })
 
         jsonResponse = {...jsonResponse, data : predictions }
