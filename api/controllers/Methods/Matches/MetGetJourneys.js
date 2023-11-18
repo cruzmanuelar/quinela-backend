@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 
 controller.MetGetJourneys = async (req, res) => {
 
-    let statusCode = 500
+    let statusCode = 200
     let jsonResponse = {
         response : true,
         message : "Se han obtenido las jornadas con exito"

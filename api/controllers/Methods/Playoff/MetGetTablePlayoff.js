@@ -17,6 +17,26 @@ controller.MetGetTablePlayOff = async (req, res) => {
 
         for await(const team of allTeams){
 
+            let lastMatches = []
+            
+            const nextGame = await prisma.parpartidos.findFirst({
+                where : {
+                    parfinalizado : false,
+                    OR : [
+                        {
+                            parlocal : team.paiid
+                        },
+                        {
+                            parvisitante : team.paiid
+                        }
+                    ]
+                },
+                include : {
+                    partlocal : true,
+                    partvisitante : true
+                }
+            })
+
             const matches = await prisma.parpartidos.findMany({
                 where : {
                     OR : [
@@ -28,9 +48,32 @@ controller.MetGetTablePlayOff = async (req, res) => {
                         }
                     ],
                     parfinalizado : true
+                },
+                include : {
+                    partlocal : true,
+                    partvisitante : true
                 }
             })
 
+
+            matches.map(mat => {
+                let infoMatch = mat.partlocal.painombre + " " + mat.pargoleslocal + " - " + mat.pargolesvisitante + " " + mat.partvisitante.painombre 
+
+                if(mat.parresultado == null){
+                    lastMatches.unshift({info:"draw", class:"Draw-Game", infoMatch})
+                }else if(mat.parresultado == team.paiid){
+                    lastMatches.unshift({info:"win", class:"Win-Game", infoMatch})
+                }else{
+                    lastMatches.unshift({info:"lost", class:"Lost-Game", infoMatch})
+                }
+            })
+
+            if(nextGame){
+                let infoMatch = nextGame.partlocal.painombre + " - " + nextGame.partvisitante.painombre
+                lastMatches.unshift({info:"Next", class:"Next-Game", infoMatch})
+            }
+
+            team["lastMatches"] = lastMatches
             team["pj"] = matches.length
             team["pg"] = matches.filter(mat => mat.parresultado == team.paiid).length
             team["pe"] = matches.filter(mat => mat.parresultado == null).length

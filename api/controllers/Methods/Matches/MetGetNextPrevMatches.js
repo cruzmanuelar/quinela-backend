@@ -59,7 +59,8 @@ controller.MetGetNextPrevMatches = async (req, res) => {
                 partlocal : {
                     select : {
                         painombre : true,
-                        paiimagen : true
+                        paiimagen : true,
+                        paiid : true
                     }
                 },
                 parhabilitado : true,
@@ -71,7 +72,8 @@ controller.MetGetNextPrevMatches = async (req, res) => {
                 partvisitante : {
                     select : {
                         painombre : true,
-                        paiimagen : true
+                        paiimagen : true,
+                        paiid : true
                     }
                 },
                 pargoleslocal : true,
@@ -139,6 +141,8 @@ controller.MetGetNextPrevMatches = async (req, res) => {
             }
             nextm['done'] = predictionUser ? true : false
 
+            nextm['partlocal']['lastMatches'] = await controller.GetLastMatches(nextm.partlocal.paiid)
+            nextm['partvisitante']['lastMatches'] = await controller.GetLastMatches(nextm.partvisitante.paiid)
         }
 
         jsonResponse = {...jsonResponse,
@@ -163,6 +167,67 @@ controller.MetGetNextPrevMatches = async (req, res) => {
         res.status(statusCode)
         .json(jsonResponse).end()
     }
+}
+
+controller.GetLastMatches = async (paiid) => {
+
+    let lastMatches = []
+            
+    const nextGame = await prisma.parpartidos.findFirst({
+        where : {
+            parfinalizado : false,
+            OR : [
+                {
+                    parlocal : paiid
+                },
+                {
+                    parvisitante : paiid
+                }
+            ]
+        },
+        include : {
+            partlocal : true,
+            partvisitante : true
+        }
+    })
+
+    const matches = await prisma.parpartidos.findMany({
+        where : {
+            OR : [
+                {
+                    parlocal : paiid
+                },
+                {
+                    parvisitante : paiid
+                }
+            ],
+            parfinalizado : true
+        },
+        include : {
+            partlocal : true,
+            partvisitante : true
+        }
+    })
+
+
+    matches.map(mat => {
+        let infoMatch = mat.partlocal.painombre + " " + mat.pargoleslocal + " - " + mat.pargolesvisitante + " " + mat.partvisitante.painombre 
+
+        if(mat.parresultado == null){
+            lastMatches.unshift({info:"draw", class:"Draw-Game", infoMatch})
+        }else if(mat.parresultado == paiid){
+            lastMatches.unshift({info:"win", class:"Win-Game", infoMatch})
+        }else{
+            lastMatches.unshift({info:"lost", class:"Lost-Game", infoMatch})
+        }
+    })
+
+    if(nextGame){
+        let infoMatch = nextGame.partlocal.painombre + " - " + nextGame.partvisitante.painombre
+        lastMatches.unshift({info:"Next", class:"Next-Game", infoMatch})
+    }
+
+    return lastMatches
 }
 
 module.exports = controller
