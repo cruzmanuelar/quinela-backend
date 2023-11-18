@@ -16,8 +16,6 @@ controller.MetGetNextPrevMatches = async (req, res) => {
 
     try{
 
-        let fecPrevMatch
-        let prevMatches = []
         let nextMatches = []
 
         const currentFec = await prisma.fecfechas.findFirst({
@@ -87,14 +85,20 @@ controller.MetGetNextPrevMatches = async (req, res) => {
             }
             nextm['done'] = predictionUser ? true : false
 
-            nextm['partlocal']['lastMatches'] = await controller.GetLastMatches(nextm.partlocal.paiid)
-            nextm['partvisitante']['lastMatches'] = await controller.GetLastMatches(nextm.partvisitante.paiid)
+            const lastMatchesLocalPromise = controller.GetLastMatches(nextm.partlocal.paiid);
+            const lastMatchesVisitorPromise = controller.GetLastMatches(nextm.partvisitante.paiid);
+
+            const [lastMatchesLocal, lastMatchesVisitor] = await Promise.all([
+                lastMatchesLocalPromise,
+                lastMatchesVisitorPromise
+            ]);
+            nextm['partlocal']['lastMatches'] = lastMatchesLocal;
+            nextm['partvisitante']['lastMatches'] = lastMatchesVisitor;
         }
 
         jsonResponse = {...jsonResponse,
             data : {
                 nextMatches,
-                prevMatches
             },
             dataUser : {
                 nextMatches,

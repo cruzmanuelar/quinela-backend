@@ -15,6 +15,16 @@ controller.MetGetTablePlayOff = async (req, res) => {
 
         let allTeams = await prisma.paipaises.findMany({})
 
+        let matches = await prisma.parpartidos.findMany({
+            where : {
+                parfinalizado : true
+            },
+            include : {
+                partlocal : true,
+                partvisitante : true
+            }
+        })
+
         for await(const team of allTeams){
 
             let lastMatches = []
@@ -37,26 +47,9 @@ controller.MetGetTablePlayOff = async (req, res) => {
                 }
             })
 
-            const matches = await prisma.parpartidos.findMany({
-                where : {
-                    OR : [
-                        {
-                            parlocal : team.paiid
-                        },
-                        {
-                            parvisitante : team.paiid
-                        }
-                    ],
-                    parfinalizado : true
-                },
-                include : {
-                    partlocal : true,
-                    partvisitante : true
-                }
-            })
+            let matchesSelection = matches.filter(mat => mat.parlocal == team.paiid || mat.parvisitante == team.paiid) 
 
-
-            matches.map(mat => {
+            matchesSelection.map(mat => {
                 let infoMatch = mat.partlocal.painombre + " " + mat.pargoleslocal + " - " + mat.pargolesvisitante + " " + mat.partvisitante.painombre 
 
                 if(mat.parresultado == null){
@@ -74,22 +67,21 @@ controller.MetGetTablePlayOff = async (req, res) => {
             }
 
             team["lastMatches"] = lastMatches
-            team["pj"] = matches.length
-            team["pg"] = matches.filter(mat => mat.parresultado == team.paiid).length
-            team["pe"] = matches.filter(mat => mat.parresultado == null).length
-            team["pp"] = matches.length - (team["pg"] + team["pe"])
+            team["pj"] = matchesSelection.length
+            team["pg"] = matchesSelection.filter(mat => mat.parresultado == team.paiid).length
+            team["pe"] = matchesSelection.filter(mat => mat.parresultado == null).length
+            team["pp"] = matchesSelection.length - (team["pg"] + team["pe"])
             let goals = 0
             let goalsRival = 0
-            matches.map(mat => {
+            console.log(matchesSelection)
 
-                if(mat.parlocal == team.paiid){
-                    goals = goals + mat.pargoleslocal
-                    goalsRival = goalsRival + mat.pargolesvisitante
-                }else{
-                    goals = goals + mat.pargolesvisitante                    
-                    goalsRival = goalsRival + mat.pargoleslocal
-                }
+            matchesSelection.forEach(mat => {
+                const isLocalTeam = mat.parlocal === team.paiid;
+              
+                goals += isLocalTeam ? mat.pargoleslocal : mat.pargolesvisitante;
+                goalsRival += isLocalTeam ? mat.pargolesvisitante : mat.pargoleslocal;
             })
+
             team["ptos"] = (team["pg"]*3) + (team["pe"]*1)
             team["gf"] = goals
             team["gc"] = goalsRival
