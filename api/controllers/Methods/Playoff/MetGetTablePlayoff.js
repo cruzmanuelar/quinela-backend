@@ -73,7 +73,6 @@ controller.MetGetTablePlayOff = async (req, res) => {
             team["pp"] = matchesSelection.length - (team["pg"] + team["pe"])
             let goals = 0
             let goalsRival = 0
-            console.log(matchesSelection)
 
             matchesSelection.forEach(mat => {
                 const isLocalTeam = mat.parlocal === team.paiid;
