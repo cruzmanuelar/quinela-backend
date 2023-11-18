@@ -18,7 +18,7 @@ const UpdatePointsValidation = require('../../controllers/Validations/Matches/Va
 router.post('/create', CreateMatchesValidation.ValCreateMatches)
 router.post('/match', GetMatchValidation.ValGetMatch)
 router.post('/end-match', EndMatchValidation.ValEndMatch)
-router.post('/next-prev', NextPrevMatchesValidation.ValGetNextPrevMatches)
+router.post('/next', NextPrevMatchesValidation.ValGetNextPrevMatches)
 router.post('/prev', PrevMatchesValidation.ValGetPrevMatches)
 router.post('/create-quinela', CreateQuinelaValidation.ValCreateQuinela)
 router.post('/get-all', GetAllMatchesValidation.ValGetAllMatches)
